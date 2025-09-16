@@ -70,3 +70,13 @@ SELECT
   ingest_timestamp,
   file_name
 FROM STREAM mimic_gaming_data.customers_bronze.customers;
+
+
+--simple MV for platers whi are under 1980 and with status platinum
+
+CREATE OR REFRESH MATERIALIZED VIEW mimic_gaming_data.customers_silver.total_platinum_customers_under_1980
+AS
+SELECT COUNT(*) as total_platinum_customers_under_1980
+FROM mimic_gaming_data.customers_silver.customers_in_silver as customers
+WHERE vip_status = 'platinum'
+AND date_of_birth < '1980-01-01'
