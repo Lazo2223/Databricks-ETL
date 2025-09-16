@@ -43,3 +43,14 @@ is_free_bet,
 channel,
 currency
 FROM STREAM mimic_gaming_data.bets_history_bronze.raw_transactions
+
+
+
+--Simple MV for players, join with transaction_history
+
+CREATE OR REFRESH MATERIALIZED VIEW mimic_gaming_data.bets_history_gold.transactions_after_2023 AS
+SELECT cs.customer_id
+FROM mimic_gaming_data.customers_silver.customers_in_silver as cs
+LEFT JOIN mimic_gaming_data.bets_history_silver.transactions_history th
+ON cs.customer_id = th.customer_id
+WHERE year(signup_date) >= '2023'
